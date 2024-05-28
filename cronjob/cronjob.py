@@ -34,7 +34,7 @@ def get_cronjob(event: JobEvent):
     event.add_enrichment(block_list)
 
 @action
-def get_cronjob(event: ExecutionBaseEvent):
+def get_cronjob_sec(event: ExecutionBaseEvent):
     """
     Enrich the finding with pods running on this node, along with the 'Ready' status of each pod.
     """
