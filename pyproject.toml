@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "cronjob"
+version = "0.0.1"
+description = ""
+authors = ["chintan sakhiya <chintansakhiya01@gmail.cpm>"]
+packages = [
+    { include = "robusta", from = "src" },
+]
+
+[tool.black]
+line-length = 120
+target-version = ['py37']
+
+[tool.isort]
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+
+[tool.poetry.scripts]
+robusta = "robusta.cli.main:app"
+
+
+[tool.poetry.dependencies]
+python = "^3.8, <3.11"
+hikaru-model-26 = "^1.1.1"
+
+
+[tool.poetry.dev-dependencies]
+robusta-cli = "^0.8.9"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
