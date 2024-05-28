@@ -3,9 +3,6 @@ name = "cronjob"
 version = "0.0.1"
 description = ""
 authors = ["chintan sakhiya <chintansakhiya01@gmail.cpm>"]
-packages = [
-    { include = "robusta", from = "src" },
-]
 
 [tool.poetry.dependencies]
 python = "^3.8, <3.11"

@@ -6,8 +6,7 @@ from robusta.api import (
     action,
     ExecutionBaseEvent,
 )
- 
-import logging
+
 from typing import List
 from hikaru.model.rel_1_26 import Pod, PodList ,CronJobList,PodList
  
