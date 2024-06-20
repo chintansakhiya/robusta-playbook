@@ -22,6 +22,7 @@ def get_cronjob(event: JobEvent):
     """
     # job=event
     cluster=event._context
+    print(cluster)
     details=get_all_cronjob_details()
     block_list: List[BaseBlock] = []
     if len(details.items)!=0:
