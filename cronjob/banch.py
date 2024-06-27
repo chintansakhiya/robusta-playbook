@@ -13,6 +13,8 @@ from hikaru.model.rel_1_26 import (
     VolumeMount,
 )
 
+from typing import List
+
 from robusta.api import (
     IMAGE_REGISTRY,
     INSTALLATION_NAMESPACE,
@@ -23,6 +25,8 @@ from robusta.api import (
     PodRunningParams,
     RobustaJob,
     action,
+    BaseBlock,
+    TableBlock,
 )
 
 
@@ -116,13 +120,17 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
 
         logging.info(benchmark_results)
 
-        finding = Finding(
-            f"Fio disk benchmark for storage class {action_params.storage_class_name}",
-            finding_type=FindingType.REPORT,
-            failure=False,
-            aggregation_key="DiskBenchmark",
+        block_list: List[BaseBlock] = []
+        
+        effected_pods_rows = [ListBanckMark(job,action_params,cluster)]
+        block_list.append(
+            TableBlock(effected_pods_rows, ["account_id","cluster_name","name", "namespace", "schedule","lastScheduleTime","lastSuccessfulTime","command","args"], table_name=f"cronjob running on the node")
         )
-        finding.add_enrichment([MarkdownBlock(text=benchmark_results)])
-        event.add_finding(finding)
+        event.add_enrichment(block_list)
     finally:
         pvc.deleteNamespacedPersistentVolumeClaim(name=action_params.pvc_name, namespace=action_params.namespace)
+
+def ListBanckMark(job,action_params,cluster)->List[str]:
+    return [
+        cluster.account_id,cluster.cluster_name,action_params.test_seconds,format_float_per2(job['read']['bw']),format_float_per2(job['read']['iops']),format_float_per2(job['write']['bw']),format_float_per2(job['write']['iops'])
+    ]
