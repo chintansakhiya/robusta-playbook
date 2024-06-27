@@ -7,7 +7,7 @@ from robusta.api import (
 )
 
 from typing import List
-from hikaru.model.rel_1_26 import PodList, CronJobList, PodList
+from hikaru.model.rel_1_26 import  CronJobList
  
  
 def CronJobListLoop(i: CronJobList,account_id,cluster_name) -> List[str]:
@@ -16,13 +16,13 @@ def CronJobListLoop(i: CronJobList,account_id,cluster_name) -> List[str]:
     ]
 
 @action
-def get_cronjob(event: JobEvent):
+def list_cronjobs(event: JobEvent):
     """
     Enrich the finding with cronjob running on this node.
     """
     # job=event
     cluster=event._context
-    details=get_all_cronjob_details()
+    details=get_all_cronjobs_details()
     block_list: List[BaseBlock] = []
     if len(details.items)!=0:
         effected_pods_rows = [CronJobListLoop(pod,cluster.account_id,cluster.cluster_name) for pod in details.items]
@@ -32,12 +32,12 @@ def get_cronjob(event: JobEvent):
     event.add_enrichment(block_list)
 
 @action
-def get_cronjob_trigger(event: ExecutionBaseEvent):
+def list_cronjobs_schedule(event: ExecutionBaseEvent):
     """
     Enrich the finding with cronjob running on this node.
     """
     cluster=event._context
-    details=get_all_cronjob_details()
+    details=get_all_cronjobs_details()
     block_list: List[BaseBlock] = []
     if len(details.items)!=0:
         effected_pods_rows = [CronJobListLoop(pod,cluster.account_id,cluster.cluster_name) for pod in details.items]
@@ -46,7 +46,7 @@ def get_cronjob_trigger(event: ExecutionBaseEvent):
         )
     event.add_enrichment(block_list)
 
-def get_all_cronjob_details():
+def get_all_cronjobs_details():
     try:
         cron_jobs_details = CronJobList.listCronJobForAllNamespaces().obj
         return cron_jobs_details
