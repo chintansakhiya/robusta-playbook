@@ -131,5 +131,5 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
 
 def ListBanckMark(job,action_params,cluster)->List[str]:
     return [
-        cluster.account_id,cluster.cluster_name,action_params.test_seconds+" s",format_float_per2(job['read']['bw']),format_float_per2(job['read']['iops']),format_float_per2(job['write']['bw']),format_float_per2(job['write']['iops'])
+        cluster.account_id,cluster.cluster_name,action_params.test_seconds,format_float_per2(job['read']['bw']),format_float_per2(job['read']['iops']),format_float_per2(job['write']['bw']),format_float_per2(job['write']['iops'])
     ]
