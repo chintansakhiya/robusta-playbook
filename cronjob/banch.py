@@ -124,7 +124,7 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
         
         effected_pods_rows = [ListBanckMark(job,action_params,cluster)]
         block_list.append(
-            TableBlock(effected_pods_rows, ["account_id","cluster_name","name", "namespace", "schedule","lastScheduleTime","lastSuccessfulTime","command","args"], table_name=f"cronjob running on the node")
+            TableBlock(effected_pods_rows, ["account_id","cluster_name","total-time", "read-band-width", "read-IO-ops/sec","write-band-width","write-ops/sec"], table_name=f"banchmark results")
         )
         event.add_enrichment(block_list)
     finally:
