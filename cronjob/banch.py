@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import List
+
 from hikaru.model.rel_1_26 import (
     Container,
     ObjectMeta,
@@ -23,8 +23,6 @@ from robusta.api import (
     PodRunningParams,
     RobustaJob,
     action,
-    BaseBlock,
-    TableBlock,
 )
 
 
@@ -103,7 +101,7 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
             ).replace("'", '"'),
         )
         job = json_output["jobs"][0]
-        cluster=event._context
+        cluster= event._context
         print(cluster)
         benchmark_results = (
             f"\nfio benchmark:\n"
@@ -112,9 +110,8 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
             f"Read IO Ops/Sec: {format_float_per2(job['read']['iops'])}\n"
             f"Write Band Width: {format_float_per2(job['write']['bw'])} KB \n"
             f"Write Ops/Sec: {format_float_per2(job['write']['iops'])}\n "
-            f"Latency: {format_float_per2(job['lat']['mean'])} ms\n"
-            f"Cluster: {cluster.cluster_name}\n"
-            f"Account: {cluster.account_id}\n"
+            f"cluster: {cluster.cluster_name}\n"
+            f"account_id: {cluster.account_id}\n"
         )
 
         logging.info(benchmark_results)
@@ -127,7 +124,5 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
         )
         finding.add_enrichment([MarkdownBlock(text=benchmark_results)])
         event.add_finding(finding)
-
-         
     finally:
         pvc.deleteNamespacedPersistentVolumeClaim(name=action_params.pvc_name, namespace=action_params.namespace)
