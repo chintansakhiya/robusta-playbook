@@ -47,7 +47,7 @@ class DiskBenchmarkParams(PodRunningParams):
 
 
 def format_float_per2(f_param):
-    return "{:.2f}".format(f_param)+"KB"
+    return "{:.2f}".format(f_param)+" KB"
 
 
 @action
