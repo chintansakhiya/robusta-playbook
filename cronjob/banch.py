@@ -126,7 +126,7 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
 
         block_list: List[BaseBlock] = []
      
-        effected_pods_rows = [action_params.test_seconds,format_float_per2(job['read']['bw'])]
+        effected_pods_rows = List[action_params.test_seconds,format_float_per2(job['read']['bw'])]
         block_list.append(
             TableBlock(effected_pods_rows, ["account_id","cluster_name"], table_name=f"banch-mark running on the node")
         )
