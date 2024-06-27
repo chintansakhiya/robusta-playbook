@@ -103,7 +103,8 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
             ).replace("'", '"'),
         )
         job = json_output["jobs"][0]
-
+        cluster=event._context
+        print(cluster)
         benchmark_results = (
             f"\nfio benchmark:\n"
             f"Total Time: {action_params.test_seconds} Sec\n"
@@ -111,25 +112,22 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
             f"Read IO Ops/Sec: {format_float_per2(job['read']['iops'])}\n"
             f"Write Band Width: {format_float_per2(job['write']['bw'])} KB \n"
             f"Write Ops/Sec: {format_float_per2(job['write']['iops'])}\n "
+            f"Latency: {format_float_per2(job['lat']['mean'])} ms\n"
+            f"Cluster: {cluster.cluster_name}\n"
+            f"Account: {cluster.account_id}\n"
         )
 
         logging.info(benchmark_results)
 
-        # finding = Finding(
-        #     f"Fio disk benchmark for storage class {action_params.storage_class_name}",
-        #     finding_type=FindingType.REPORT,
-        #     failure=False,
-        #     aggregation_key="DiskBenchmark",
-        # )
-        # finding.add_enrichment([MarkdownBlock(text=benchmark_results)])
-        # event.add_finding(finding)
-
-        block_list: List[BaseBlock] = []
-     
-        effected_pods_rows = List[action_params.test_seconds,format_float_per2(job['read']['bw'])]
-        block_list.append(
-            TableBlock(effected_pods_rows, ["account_id","cluster_name"], table_name=f"banch-mark running on the node")
+        finding = Finding(
+            f"Fio disk benchmark for storage class {action_params.storage_class_name}",
+            finding_type=FindingType.REPORT,
+            failure=False,
+            aggregation_key="DiskBenchmark",
         )
-        event.add_enrichment(block_list)
+        finding.add_enrichment([MarkdownBlock(text=benchmark_results)])
+        event.add_finding(finding)
+
+         
     finally:
         pvc.deleteNamespacedPersistentVolumeClaim(name=action_params.pvc_name, namespace=action_params.namespace)
