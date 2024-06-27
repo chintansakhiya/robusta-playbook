@@ -47,7 +47,7 @@ class DiskBenchmarkParams(PodRunningParams):
 
 
 def format_float_per2(f_param):
-    return "{:.2f}".format(f_param)
+    return "{:.2f}".format(f_param)+"KB"
 
 
 @action
@@ -106,16 +106,15 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
         )
         job = json_output["jobs"][0]
         cluster= event._context
-        print(cluster)
         benchmark_results = (
             f"\nfio benchmark:\n"
             f"Total Time: {action_params.test_seconds} Sec\n"
             f"Read Band Width: {format_float_per2(job['read']['bw'])} KB \n"
             f"Read IO Ops/Sec: {format_float_per2(job['read']['iops'])}\n"
             f"Write Band Width: {format_float_per2(job['write']['bw'])} KB \n"
-            f"Write Ops/Sec: {format_float_per2(job['write']['iops'])}\n "
+            f"Write Ops/Sec: {format_float_per2(job['write']['iops'])}\n"
             f"cluster: {cluster.cluster_name}\n"
-            f"account_id: {cluster.account_id}\n"
+            f"account_id: {cluster.account_id}\n "
         )
 
         logging.info(benchmark_results)
