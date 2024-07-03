@@ -98,7 +98,8 @@ def custom_disk_benchmark(event: ExecutionBaseEvent, action_params: DiskBenchmar
             ],
             restartPolicy="Never",
         )
-
+        print(spec)
+        print(name, 120 + action_params.test_seconds, custom_annotations=action_params.custom_annotations)
         json_output = json.loads(
             RobustaJob.run_simple_job_spec(
                 spec, name, 120 + action_params.test_seconds, custom_annotations=action_params.custom_annotations
